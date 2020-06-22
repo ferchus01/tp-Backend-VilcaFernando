@@ -1,0 +1,93 @@
+<div>
+    <form class="card" #formRegistro="ngForm">
+        <div class="card-header"> Envio de Mensajes-</div>
+        <div class="card-body">
+            <div class="row form-group">
+                <label class="col-sm-12 col-md-4">Para</label>
+                <input class="form-control col-sm-12 col-md-8" type="number" name="txtpara" [(ngModel)]="mensaje.para"
+                    required #txtpara="ngModel" />
+                <div *ngIf="txtpara.invalid && (txtpara.dirty || txtpara.touched)" class="alert alert-danger">
+                    <div *ngIf="txtpara.errors.required">
+                        Este es un campo requerido
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-12 col-md-4" for="empresa">Empresa</label>
+                <select name="idcategoria" id="empresa" class="form-control col-sm-12 col-md-8"
+                    [(ngModel)]="mensaje.empresa" required #empresa="ngModel">
+                    <option *ngFor="let item of empresas" [ngValue]="item" > {{item.nombre}} </option>
+                </select>
+                <div *ngIf="empresa.invalid && (empresa.dirty || empresa.touched)" class="alert alert-danger">
+                    <div *ngIf="empresa.errors.required">
+                        Este es un campo requerido
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-sm-12 col-md-4">Desde</label>
+                <input class="form-control col-sm-12 col-md-8" type="number" name="txtdesde"
+                    [(ngModel)]="mensaje.desde" required #txtdesde="ngModel" />
+                <div *ngIf="txtdesde.invalid && (txtdesde.dirty || txtdesde.touched)" class="alert alert-danger">
+                    <div *ngIf="txtdesde.errors.required">
+                        Este es un campo requerido
+                    </div>
+                </div>
+            </div>
+            <label>Longitud de texto escrito: {{tamTexto}}</label>
+            <div class="row form-group">
+                <textarea class="form-control" [maxlength]="tamMaxTexto" rows="5" name="txtTexto"
+                    [(ngModel)]="mensaje.texto" (ngModelChange)="cambiarTamTexto()" required #texto="ngModel">
+                </textarea>
+                <div *ngIf="texto.invalid && (texto.dirty || texto.touched)" class="alert alert-danger">
+                    <div *ngIf="texto.errors.required">
+                        Este es un campo requerido
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <button type="button" class="btn btn-primary" (click)="modal.open(contenido)" [disabled]="!formRegistro.form.valid">Enviar</button>
+                <button type="submit" class="btn btn-primary" (click)="limpiar()">Limpiar</button>
+            </div>
+        </div>
+    </form>
+    <ng-template #contenido let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">Mensaje</h4>
+            <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div>Para: {{mensaje.para}}</div>
+            <div>Empresa: {{mensaje.empresa.nombre}}</div>
+            <div>Desde: {{mensaje.desde}}</div>
+            <div>Texto: {{mensaje.texto}}</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+            <button type="button" class="btn btn-success" (click)="modal.close();addMensaje()">Ok!</button>
+        </div>
+    </ng-template>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">Desde</th>
+                <th class="text-center" scope="col">Para</th>
+                <th class="text-center" scope="col">Empresa</th>
+                <th class="text-center" scope="col">Texto</th>
+                <th class="text-center" scope="col">Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of mensajes">
+                <td class="text-center">{{item.desde}}</td>
+                <td class="text-center">{{item.para}}</td>
+                <td class="text-center">{{item.empresa.nombre}}</td>
+                <td class="text-center">{{item.texto}}</td>
+                <td class="text-center">{{item.fecha | date:'medium'}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
